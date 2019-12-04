@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "nanohtml": "^1.9.0",
+    "nanomorph": "^5.4.0"
+  },
+  "scripts": {
+    "w:app": "watchify src/app -o public/build/bundle.js --verbose",
+    "w:css": "abrusco src/css -o public/build/master.css --watch",
+    "w": "npm run w:app & npm run w:css"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2018
+    }
+  }
+}
