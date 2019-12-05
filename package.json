@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "abrusco": "^0.8.0",
     "nanohtml": "^1.9.0",
     "nanomorph": "^5.4.0"
   },
