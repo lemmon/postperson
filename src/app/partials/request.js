@@ -1,4 +1,5 @@
 const html = require('nanohtml')
+const saveState = require('../utils/save-state')
 
 const methods = [
   'GET',
@@ -16,9 +17,6 @@ const handleChange = (e, app) => {
 
 const handleSubmit = (e, app) => {
   e.preventDefault()
-  app.state.response = {
-    loading: true,
-  }
   app.render()
   const form = e.target
   const t = Date.now()
@@ -32,6 +30,7 @@ const handleSubmit = (e, app) => {
       headers: Array.from(res.headers),
       body: await res.text(),
       time: Date.now() - t,
+      tab: app.state.response && app.state.response.tab || 'body',
     }
     saveState(app.state)
     app.render()
@@ -72,10 +71,3 @@ module.exports = (props, app) => html`
     </form>
   </div>
 `
-
-function saveState(state) {
-  window.localStorage.setItem('postperson', JSON.stringify({
-    request: state.request,
-    response: state.response,
-  }))
-}
