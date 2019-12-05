@@ -23,7 +23,7 @@ const handleSubmit = (e, app) => {
   fetch(form.elements['resource'].value, {
     method: form.elements['method'].value,
   }).then(async res => {
-    app.state.response = {
+    const response = app.state.response = {
       ok: res.ok,
       status: res.status,
       statusText: res.statusText,
@@ -31,6 +31,10 @@ const handleSubmit = (e, app) => {
       body: await res.text(),
       time: Date.now() - t,
       tab: app.state.response && app.state.response.tab || 'body',
+    }
+    response.type = (response.headers.find(curr => curr[0] == 'content-type') || ['', ''])[1].split(';', 1)[0] || null
+    if (response.type === 'application/json') {
+      response.json = JSON.parse(response.body)
     }
     saveState(app.state)
     app.render()

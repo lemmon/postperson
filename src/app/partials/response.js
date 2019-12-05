@@ -23,7 +23,7 @@ const tabs = [
     (props, app) => `Body`,
     (props, app) => html`
       <div class="p1">
-        <pre class="code f2 lh4" style="white-space: pre-wrap; word-wrap: break-word;">${props.body}</pre>
+        <pre class="code f2 lh4" style="white-space: pre-wrap; word-wrap: break-word;">${props.json ? JSON.stringify(props.json, null, 2) : props.body}</pre>
       </div>
     `,
   ],
