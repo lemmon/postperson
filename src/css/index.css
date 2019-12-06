@@ -1,3 +1,7 @@
 @import '-forms';
 @import '-buttons';
 @import 'abrusco';
+
+:root {
+  --code-font-family: Courier, monospace;
+}
