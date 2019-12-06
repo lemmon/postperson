@@ -56,8 +56,24 @@ module.exports = (props, app) => props ? html`
           <dt class="px05 py05b pr025">Size:</dt>
           <dd class="px05 py05b pl025">${props.body.length} B</dd>
         </dl>
+        <div class="px05">
+          <a
+            class="block px05 py05b ul:hover"
+            onclick=${e => {
+              e.preventDefault()
+              app.state.response = null
+              saveState(app.state)
+              app.render()
+            }}
+            href="#"
+          >clear</a>
+        </div>
       </div>
     </nav>
     ${tabs.map(tab => tab[0] === props.tab ? tab[2](props, app) : ``)}
   </section>
-` : ``
+` : html`
+  <section class="p1">
+    <div class="p1"><p class="lh4">Waiting for response to be sent.</p></div>
+  </section>
+`

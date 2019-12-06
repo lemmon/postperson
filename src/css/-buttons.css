@@ -20,3 +20,34 @@
     padding: 0;
   }
 }
+
+.button:disabled:not(.button--loading) {
+  cursor: not-allowed;
+  opacity: .4;
+}
+
+.button--loading {
+  cursor: progress;
+  & .button__caption {
+    visibility: hidden;
+  }
+  & .button__loader {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.6em;
+    height: 1.6em;
+    margin-top: calc(-1.6em / 2);
+    margin-left: calc(-1.6em / 2);
+    border: 2px solid;
+    border-color: currentColor transparent transparent transparent;
+    border-radius: 100%;
+    animation: rotate .5s linear infinite;
+  }
+}
+
+@keyframes rotate {
+    0% { transform: rotateZ(-360deg); }
+  100% { transform: rotateZ(0deg); }
+}

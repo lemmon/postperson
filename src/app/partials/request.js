@@ -19,6 +19,10 @@ const handleSubmit = (e, app) => {
   e.preventDefault()
   app.render()
   const form = e.target
+  const button = form.querySelector('button')
+  app.state.request.loading = true
+  button.classList.add('button--loading')
+  button.disabled = true
   const t = Date.now()
   fetch(form.elements['resource'].value, {
     method: form.elements['method'].value,
@@ -36,6 +40,7 @@ const handleSubmit = (e, app) => {
     if (response.type === 'application/json') {
       response.json = JSON.parse(response.body)
     }
+    delete app.state.request.loading
     saveState(app.state)
     app.render()
   })
@@ -68,9 +73,13 @@ module.exports = (props, app) => html`
           /></label>
         </div>
         <div class="p05"><button
-          class="button bg-black color-white px2 py1"
+          class="button ${props.loading ? `button--loading` : ``} bg-black color-white px2 py1"
           type="submit"
-        >Send</button></div>
+          disabled=${!!props.loading}
+        >
+          <div class="button__caption">Send</div>
+          <div class="button__loader"></div>
+        </button></div>
       </div>
     </form>
   </div>
