@@ -48,6 +48,15 @@ const handleSubmit = (e, app) => {
   })
 }
 
+const textarea = (props) => {
+  const el = document.createElement('custom-textarea')
+  el.className = 'input input--textarea p1b code f2'
+  el.name = 'body'
+  el.value = props.body || ''
+  el.placeholder = '{}'
+  return el
+}
+
 module.exports = (props, app) => html`
   <div class="px1">
     <form
@@ -86,11 +95,7 @@ module.exports = (props, app) => html`
           </button></div>
         </div>
         <div class="p05">
-          <label class="block ba"><textarea
-            class="input input--textarea p1b code f2"
-            style="height: 8rem; resize: none;"
-            name="body"
-          >${props.body || ``}</textarea></label>
+          <label class="block ba">${textarea(props)}</label>
         </div>
       </div>
     </form>
