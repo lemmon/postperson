@@ -3,7 +3,7 @@ const saveState = require('../utils/save-state')
 const tabs = require('./tabs')
 
 module.exports = (props, app) => props ? html`
-  <section class="p2">
+  <section class="p2 lh4">
     ${tabs({
       index: props.tab,
       list: [
@@ -12,13 +12,13 @@ module.exports = (props, app) => props ? html`
       ],
       panels: [
         () => html`
-          <div class="mt1 code">
+          <div class="mt1 code code--block">
             <pre style="white-space: pre-wrap; word-wrap: break-word;">${props.json ? JSON.stringify(props.json, null, 2) : props.body}</pre>
           </div>
         `,
         () => html`
-          <div class="mt1 code">
-            <table class="code">
+          <div class="mt1 code code--block">
+            <table>
               ${props.headers.map(([name, value]) => html`
                 <tr>
                   <td class="color-black-50">${name}<span class="inlineblock o0" style="width: 2ch;">:</span></td>
@@ -59,7 +59,7 @@ module.exports = (props, app) => props ? html`
     }, app)}
   </section>
 ` : html`
-  <section class="p1">
-    <div class="p1"><p class="lh4">Waiting for response to be sent.</p></div>
+  <section class="p1 lh4">
+    <div class="p1"><p>Waiting for response to be sent.</p></div>
   </section>
 `

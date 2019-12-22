@@ -58,9 +58,8 @@ const textarea = (props) => {
 }
 
 module.exports = (props, app) => html`
-  <div class="p1">
+  <div class="p1 lh4">
     <form
-      class="lh4"
       onchange=${e => handleChange(e, app)}
       onsubmit=${e => handleSubmit(e, app)}
     >
@@ -102,7 +101,7 @@ module.exports = (props, app) => html`
             panels: [
               () => html`
                 <div class="mt1">
-                  <label class="block bg-black-05 code py0125">${textarea({ value: props.body })}</label>
+                  <label class="block bg-black-05 code code--block">${textarea({ value: props.body })}</label>
                 </div>
               `,
             ],

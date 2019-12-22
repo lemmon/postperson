@@ -2,7 +2,7 @@ const html = require('nanohtml')
 const saveState = require('../utils/save-state')
 
 const renderTabs = ({ entries, active, info, onchange }) => html`
-  <nav class="lh4 row">
+  <nav class="row">
     <ul class="row">
       ${entries.map((curr, index) => html`
         <li
