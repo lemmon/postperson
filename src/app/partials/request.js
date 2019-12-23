@@ -29,6 +29,7 @@ const handleSubmit = (e, app) => {
   fetch(request.resource, {
     method: request.method,
     body: request.body || undefined,
+    headers: parseHeaders(request.headers),
   }).then(async res => {
     const response = app.state.response = {
       ok: res.ok,
@@ -52,8 +53,10 @@ const handleSubmit = (e, app) => {
 const textarea = (props) => {
   const el = document.createElement('custom-textarea')
   el.className = 'input input--textarea p1'
-  el.name = 'body'
+  el.id = props.id
+  el.name = props.name
   el.value = props.value || ''
+  if (props.placeholder) el.placeholder = props.placeholder
   return el
 }
 
@@ -97,11 +100,26 @@ module.exports = (props, app) => html`
             index: props.tab,
             list: [
               () => html`<span class="ul:hover">Body</span>`,
+              () => html`<span class="ul:hover">Headers</span>`,
             ],
             panels: [
               () => html`
                 <div class="mt1">
-                  <label class="block bg-black-05 code code--block">${textarea({ value: props.body })}</label>
+                  <label class="block bg-black-05 code code--block">${textarea({
+                    id: 'f__request__body',
+                    name: 'body',
+                    value: props.body,
+                  })}</label>
+                </div>
+              `,
+              () => html`
+                <div class="mt1">
+                  <label class="block bg-black-05 code code--block">${textarea({
+                    id: 'f__request__headers',
+                    name: 'headers',
+                    value: props.headers,
+                    placeholder: 'name: value',
+                  })}</label>
                 </div>
               `,
             ],
@@ -116,3 +134,14 @@ module.exports = (props, app) => html`
     </form>
   </div>
 `
+
+function parseHeaders(input) {
+  return input
+    .split(/\n/)
+    .map(l => l.trim())
+    .map(l => l.match(/^([^\s:]+)\s*[:=]\s*(.*)/))
+    .filter(l => l && l[2])
+    .reduce((acc, curr) => Object.assign(acc, {
+      [curr[1]]: curr[2],
+    }), {})
+}
