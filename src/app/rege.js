@@ -66,7 +66,7 @@ module.exports = (renderPage, initialState = {}) => {
   // render
   app.render = () => {
     morph(
-      document.body,
+      window.app,
       renderPage(app),
     )
   }
