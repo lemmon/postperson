@@ -57,6 +57,7 @@ const textarea = (props) => {
   el.name = props.name
   el.value = props.value || ''
   if (props.placeholder) el.placeholder = props.placeholder
+  if (props.onchange) el.onchange = props.onchange
   return el
 }
 
@@ -100,7 +101,7 @@ module.exports = (props, app) => html`
             index: props.tab,
             list: [
               () => html`<span class="ul:hover">Body</span>`,
-              () => html`<span class="ul:hover">Headers</span>`,
+              () => html`<span class="ul:hover">Headers</span>${props ? html`<span class="inline-block ml025 color-black-40">(${props.headersCount || 0})</span>` : ``}`,
             ],
             panels: [
               () => html`
@@ -119,6 +120,12 @@ module.exports = (props, app) => html`
                     name: 'headers',
                     value: props.headers,
                     placeholder: 'name: value',
+                    onchange: (e) => {
+                      props.headersCount = Object.keys(parseHeaders(e.target.value)).length
+                      setTimeout(() => {
+                        app.render()
+                      })
+                    },
                   })}</label>
                 </div>
               `,
