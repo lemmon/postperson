@@ -136,7 +136,7 @@ module.exports = (props, app) => html`
 `
 
 function parseHeaders(input) {
-  return input
+  return input && input
     .split(/\n/)
     .map(l => l.trim())
     .map(l => l.match(/^([^\s:]+)\s*[:=]\s*(.*)/))
