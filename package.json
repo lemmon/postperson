@@ -3,13 +3,15 @@
     "@lemmon/custom-textarea": "0.0.8",
     "abrusco": "^0.8.1",
     "nanohtml": "^1.9.0",
-    "nanomorph": "^5.4.0"
+    "nanomorph": "^5.4.0",
+    "tinyify": "^2.5.2"
   },
   "scripts": {
     "w:app": "watchify src/app -o public/build/bundle.js --verbose",
     "w:css": "abrusco src/css -o public/build/master.css --watch",
     "w": "npm run w:app & npm run w:css"
   },
+  "browserslist": "firefox 63, chrome 67",
   "eslintConfig": {
     "parserOptions": {
       "ecmaVersion": 2018

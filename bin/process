@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const path = require('path')
+
+const file = path.resolve(__dirname, '../public/index.html')
+const dist = path.resolve(__dirname, '../dist/index.html')
+
+// read file
+const code = fs.readFileSync(file, 'utf8')
+  // trim lines
+  .replace(/^\s+/gm, '')
+  // embed javascript
+  .replace(/<script src="([^"]+\.js)"><\/script>/g, (m, href) => {
+    const code = fs.readFileSync(path.resolve(path.dirname(dist), href), 'utf8')
+      .replace(/"(\\n)+\s+"/g, '"\\n"')
+    return `<script>\n${code}\n</script>`
+  })
+  // embed css
+  .replace(/<link rel="stylesheet" href="([^"]+\.css)">/g, (m, href) => {
+    const code = fs.readFileSync(path.resolve(path.dirname(dist), href), 'utf8')
+      .replace(/"(\\n)+\s+"/g, '"\\n"')
+    return `<style>\n${code}\n</style>`
+  })
+
+// output file
+fs.writeFileSync(dist, code, 'utf8')
+
+// echo
+console.log('index.html processed')
