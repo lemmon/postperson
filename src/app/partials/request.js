@@ -80,7 +80,7 @@ module.exports = (props, app) => html`
             </select><div class="px025 py1">\u2193</div></label></div>
             <div class="p05 span1"><label class="block"><input
               class="input p1 bg-black-05"
-              type="url"
+              type="text"
               name="resource"
               placeholder="http://"
               required
