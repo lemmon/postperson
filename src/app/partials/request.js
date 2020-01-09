@@ -70,7 +70,7 @@ module.exports = (props, app) => html`
       <div class="p05">
         <div class="row">
           <div class="span1 row">
-            <div class="p05"><label class="block px075 row bg-black-05"><select
+            <div class="p05"><label class="block px075 row bg-black-05 outline:focus-within"><select
               class="input input--select px025 py1"
               name="method"
             >
@@ -78,7 +78,7 @@ module.exports = (props, app) => html`
                 <option selected=${curr === props.method}>${curr}</option>
               `)}
             </select><div class="px025 py1">\u2193</div></label></div>
-            <div class="p05 span1"><label class="block"><input
+            <div class="p05 span1"><label class="block outline:focus-within"><input
               class="input p1 bg-black-05"
               type="text"
               name="resource"
@@ -88,12 +88,12 @@ module.exports = (props, app) => html`
             /></label></div>
           </div>
           <div class="p05"><button
-            class="button ${props.loading ? `button--loading` : ``} bg-black color-white px2 py1"
+            class="button ${props.loading ? `button--loading` : ``} bg-black px2 py1 outline:focus"
             type="submit"
             disabled=${!!props.loading}
           >
-            <div class="button__caption fw500">Send</div>
-            <div class="button__loader"></div>
+            <div class="button__caption color-white fw500">Send</div>
+            <div class="button__loader color-white"></div>
           </button></div>
         </div>
         <div class="p05">
@@ -106,7 +106,7 @@ module.exports = (props, app) => html`
             panels: [
               () => html`
                 <div class="mt1">
-                  <label class="block bg-black-05 code code--block">${textarea({
+                  <label class="block bg-black-05 code code--block outline:focus-within">${textarea({
                     id: 'f__request__body',
                     name: 'body',
                     value: props.body,
@@ -115,7 +115,7 @@ module.exports = (props, app) => html`
               `,
               () => html`
                 <div class="mt1">
-                  <label class="block bg-black-05 code code--block">${textarea({
+                  <label class="block bg-black-05 code code--block outline:focus-within">${textarea({
                     id: 'f__request__headers',
                     name: 'headers',
                     value: props.headers,

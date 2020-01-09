@@ -8,3 +8,10 @@
   padding-top: .125rem;
   padding-bottom: .125rem;
 }
+
+.outline,
+.outline\:focus:focus,
+.outline\:focus-within:focus-within {
+  outline: 2px solid;
+  outline-offset: 1px;
+}
