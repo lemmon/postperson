@@ -150,5 +150,5 @@ function parseHeaders(input) {
     .filter(l => l && l[2])
     .reduce((acc, curr) => Object.assign(acc, {
       [curr[1]]: curr[2],
-    }), {})
+    }), {}) || {}
 }
