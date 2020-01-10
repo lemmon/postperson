@@ -44,8 +44,12 @@ const handleSubmit = (e, app) => {
     if (response.type === 'application/json') {
       response.json = JSON.parse(response.body)
     }
-    delete request.loading
+    flash.notice('Response received successfully.')
     saveState(app.state)
+  }).catch(err => {
+    flash.error(err.message)
+  }).then(() => {
+    delete request.loading
     app.render()
   })
 }
