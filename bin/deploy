@@ -1,19 +1,8 @@
 #!/bin/sh
 cd "$(dirname $0)/.."
 
-HOST=37.9.175.9
-DEST=web
-USER=postperson.io
-PASS=$(security find-internet-password -s $HOST -a $USER -r ftps -w)
-DIST=dist
-
 bin/build
 bin/process
 
-ftpup \
-  -i '**/.DS_Store' \
-  -i 'build/**' \
-  -u ${USER} \
-  -p ${PASS} \
-  ${DIST} \
-  ${HOST}/${DEST}
+now --prod
+now rm postperson --safe --yes
