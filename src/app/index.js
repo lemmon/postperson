@@ -2,6 +2,11 @@ const html = require('nanohtml')
 const rege = require('./rege')
 const page = require('./pages/default')
 
+window.dd = (...args) => {
+  args.forEach(arg => console.log('🔍', arg))
+  return args[0]
+}
+
 const init = JSON.parse(window.localStorage.getItem('postperson'))
 const defaultState = {
   request: { tab: 0 },
