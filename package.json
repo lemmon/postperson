@@ -4,7 +4,7 @@
     "abrusco": "^0.8.1",
     "nanohtml": "^1.9.1",
     "nanomorph": "^5.4.2",
-    "tinyify": "^2.5.2"
+    "tinyify": "^3.0.0"
   },
   "scripts": {
     "w:app": "watchify src/app -o develop/build/bundle.js --verbose",
