@@ -1,29 +1,66 @@
 #!/usr/bin/env node
-const fs = require('fs')
+const fs = require('fs').promises
 const path = require('path')
+const abrusco = require('abrusco-cli')
+const { PurgeCSS } = require('purgecss')
 
-const file = path.resolve(__dirname, '../develop/index.html')
-const dist = path.resolve(__dirname, '../public/index.html')
+const inputFile = path.resolve(__dirname, '../develop/index.html')
+const outputFile = path.resolve(__dirname, '../public/index.html')
 
-// read file
-const code = fs.readFileSync(file, 'utf8')
-  // trim lines
-  .replace(/^\s+/gm, '')
-  // embed javascript
-  .replace(/<script src="([^"]+\.js)"><\/script>/g, (m, href) => {
-    const code = fs.readFileSync(path.resolve(path.dirname(dist), href), 'utf8')
-      .replace(/"(\\n)+\s+"/g, '"\\n"')
-    return `<script>\n${code}\n</script>`
+async function processCSS(input, html) {
+  const purgeCSSResult = await new PurgeCSS().purge({
+    content: [{ raw: html, extension: 'html' }],
+    css: [{ raw: input }],
+    defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
   })
-  // embed css
-  .replace(/<link rel="stylesheet" href="([^"]+\.css)">/g, (m, href) => {
-    const code = fs.readFileSync(path.resolve(path.dirname(dist), href), 'utf8')
-      .replace(/"(\\n)+\s+"/g, '"\\n"')
-    return `<style>\n${code}\n</style>`
+  const abruscoCSSResult = await abrusco(purgeCSSResult[0].css, {
+    from: undefined,
+    cssvars: false,
+    minify: true,
   })
+  return abruscoCSSResult.css
+}
 
-// output file
-fs.writeFileSync(dist, code, 'utf8')
+async function main() {
+  // read input file
+  await fs.readFile(inputFile, 'utf8')
+    .then(html => (
+      // trim lines
+      html.replace(/^[\s\n]+/gm, '')
+    ))
+    .then(html => (
+      // process JS
+      Promise.all([...html.matchAll(/<script src="([^"]+\.js)"><\/script>/g)].map(([m, href]) => (
+        fs.readFile(path.resolve(path.dirname(outputFile), href), 'utf8')
+      )))
+        .then(x => x.join())
+        .then(x => (
+          x.replace(/\\n\s+/g, '')
+        ))
+        .then(x => (
+          html
+            .replace(/<script src="[^"]+\.js"><\/script>/g, '')
+            .replace(/(?=<\/body>)/, `<script>${x}</script>`)
+        ))
+    ))
+    .then(html => (
+      // process CSS
+      Promise.all([...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)">/g)].map(([m, href]) => (
+        fs.readFile(path.resolve(path.dirname(inputFile), href), 'utf8')
+      )))
+        .then(x => x.join())
+        .then(x => processCSS(x, html))
+        .then(x => (
+          html
+            .replace(/<link rel="stylesheet" href="[^"]+\.css">/g, '')
+            .replace(/(?=<\/head>)/, `<style>${x}</style>`)
+        ))
+    ))
+    .then(x => (
+      fs.writeFile(outputFile, x, 'utf8')
+    ))
+}
 
-// echo
-console.log('index.html processed')
+main().then(() => {
+  console.log('index.html processed')
+})

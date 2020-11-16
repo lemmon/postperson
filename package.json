@@ -11,7 +11,6 @@
     "w:css": "abrusco src/css -o develop/build/master.css --watch",
     "w": "npm run w:app & npm run w:css"
   },
-  "browserslist": "firefox 63, chrome 67",
   "eslintConfig": {
     "parserOptions": {
       "ecmaVersion": 2018

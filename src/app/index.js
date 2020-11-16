@@ -12,9 +12,14 @@ const defaultState = {
   request: { tab: 0 },
 }
 
+const messageTypes = {
+  error: 'flash__message--error',
+  notice: 'flash__message--notice',
+}
+
 flash.message = (type, text) => {
   const el = document.createElement('div')
-  el.className = `flash__message flash__message--${type}`
+  el.className = `flash__message ${messageTypes[type]}`
   el.textContent = text
   flash.appendChild(el)
   setTimeout(() => {

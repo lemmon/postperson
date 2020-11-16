@@ -1,5 +1,5 @@
 .now
 node_modules
-develop/build
-public/build
 public/index.html
+/**/build/*
+!/**/.gitkeep

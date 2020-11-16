@@ -1,6 +1,3 @@
 #!/bin/sh
 
-mkdir -pv public/build
-
 browserify src/app -t nanohtml -p tinyify | babel-env | minify > public/build/bundle.js
-abrusco src/css -o public/build/master.css --minify
