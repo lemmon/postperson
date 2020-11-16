@@ -28,6 +28,6 @@ flash.message = (type, text) => {
 flash.notice = (msg) => flash.message('notice', msg)
 flash.error = (msg) => flash.message('error', msg)
 
-require('@lemmon/custom-textarea/element')
+require('@lemmon/custom-textarea')
 
 rege(app => page(app), init || defaultState).render()
