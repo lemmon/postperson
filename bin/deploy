@@ -4,5 +4,5 @@ cd "$(dirname $0)/.."
 bin/build
 bin/process
 
-now --prod
-now rm postperson --safe --yes
+vercel --prod
+vercel rm postperson --safe --yes
