@@ -59,7 +59,7 @@ module.exports = (props, app) => props ? html`
     }, app)}
   </section>
 ` : html`
-  <section class="p1 lh4">
-    <div class="p1"><p>Waiting for response to be sent.</p></div>
+  <section class="p1">
+    <div class="p1"><p class="lh4">No request sent, yet.</p></div>
   </section>
 `
