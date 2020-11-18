@@ -4,6 +4,5 @@ module.exports = (state) => {
       ...state.request,
       loading: undefined,
     },
-    response: state.response,
   }))
 }
