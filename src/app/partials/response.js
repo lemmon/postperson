@@ -21,7 +21,7 @@ module.exports = (props, app) => props ? html`
             <table>
               ${props.headers.map(([name, value]) => html`
                 <tr>
-                  <td class="color-black-50">${name}<span class="inlineblock o0" style="width: 2ch;">:</span></td>
+                  <td class="color-black-60">${name}:<span class="inlineblock o0" style="width: 2ch;">:</span></td>
                   <td class="ml1">${value}</td>
                 </tr>
               `)}
@@ -31,16 +31,16 @@ module.exports = (props, app) => props ? html`
       ],
       info: () => html`
         <dl class="px05 row">
-          <dt class="px05 py05b pr025">Status:</dt>
-          <dd class="px05 py05b pl025 color-${props.ok ? `green` : `red`}">${props.status} ${props.statusText}</dd>
-          <dt class="px05 py05b pr025">Time:</dt>
+          <dt class="px05 py05b pr025 color-black-40">Status:</dt>
+          <dd class="px05 py05b pl025 ${props.ok ? `color-green` : `color-red`}">${props.status} ${props.statusText}</dd>
+          <dt class="px05 py05b pr025 color-black-40">Time:</dt>
           <dd class="px05 py05b pl025">${props.time} ms</dd>
-          <dt class="px05 py05b pr025">Size:</dt>
+          <dt class="px05 py05b pr025 color-black-40">Size:</dt>
           <dd class="px05 py05b pl025">${props.body.length} B</dd>
         </dl>
         <div class="px05">
           <a
-            class="block px05 py05b ul:hover"
+            class="block px05 py05b color-black-40 ul:hover color-inherit:hover"
             onclick=${e => {
               e.preventDefault()
               app.state.response = null
