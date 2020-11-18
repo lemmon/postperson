@@ -1,7 +1,12 @@
-@import '-forms';
-@import '-buttons';
-@import '-messages';
-@import 'abrusco';
+@import 'abrusco/base';
+@import 'abrusco/modules';
+
+@import './forms';
+@import './buttons';
+@import './messages';
+
+@import 'abrusco/utils';
+@import 'abrusco/debug';
 
 .code--block {
   font-size: 14px;
