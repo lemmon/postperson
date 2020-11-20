@@ -2,7 +2,7 @@ const html = require('nanohtml')
 const rege = require('./rege')
 const page = require('./pages/default')
 
-window.dd = (...args) => {
+window.cl = (...args) => {
   args.forEach(arg => console.log('🔍', arg))
   return args[0]
 }
