@@ -11,7 +11,6 @@ const methods = [
 ]
 
 const handleChange = (e, app) => {
-  if (!app.state.request) app.state.request = { tab: 0 }
   app.state.request[e.target.name] = e.target.value
   saveState(app.state)
 }

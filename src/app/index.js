@@ -7,10 +7,11 @@ window.dd = (...args) => {
   return args[0]
 }
 
-const init = JSON.parse(window.localStorage.getItem('postperson'))
 const defaultState = {
-  request: { tab: 0 },
+  request: {},
+  ...JSON.parse(window.localStorage.getItem('postperson')),
 }
+if (!defaultState.request) defaultState.request = {}
 
 const messageTypes = {
   error: 'flash__message--error',
@@ -35,4 +36,4 @@ flash.error = (msg) => flash.message('error', msg)
 
 require('@lemmon/custom-textarea')
 
-rege(app => page(app), init || defaultState).render()
+rege(app => page(app), defaultState).render()
