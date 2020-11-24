@@ -104,7 +104,7 @@ module.exports = (props, app) => html`
             index: props.tab,
             list: [
               () => html`<span class="ul:hover">Body</span>`,
-              () => html`<span class="ul:hover">Headers</span>${props ? html`<span class="inline-block ml025 color-black-40">(${props.headersCount || 0})</span>` : ``}`,
+              () => html`<span class="ul:hover">Headers</span>${props && props.headersCount ? html`<span class="inlineblock ml025 color-black-40">(${props.headersCount})</span>` : ``}`,
             ],
             panels: [
               () => html`

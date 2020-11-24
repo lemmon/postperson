@@ -8,7 +8,7 @@ module.exports = (props, app) => props ? html`
       index: props.tab,
       list: [
         () => html`<span class="ul:hover">Body</span>`,
-        () => html`<span class="ul:hover">Headers</span>${props ? html`<span class="inline-block ml025 color-black-40">(${props.headers.length})</span>` : ``}`,
+        () => html`<span class="ul:hover">Headers</span>${props ? html`<span class="inlineblock ml025 color-black-40">(${props.headers.length})</span>` : ``}`,
       ],
       panels: [
         () => html`
