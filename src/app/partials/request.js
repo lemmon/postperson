@@ -17,7 +17,7 @@ const handleChange = (e, app) => {
 const handleSubmit = (e, app) => {
   e.preventDefault()
   app.render()
-  const request = app.state.request
+  const { request } = app.state
   const form = e.target
   const button = form.querySelector('button')
   button.classList.add('button--loading')
@@ -31,15 +31,17 @@ const handleSubmit = (e, app) => {
     body: request.body || undefined,
     headers: parseArgs(request.headers),
   }).then(async res => {
-    const response = app.state.response = {
-      ok: res.ok,
-      status: res.status,
-      statusText: res.statusText,
-      headers: Array.from(res.headers),
-      body: await res.text(),
-      time: Date.now() - t,
-      tab: app.state.response && app.state.response.tab || 0,
-    }
+    const { response } = app.setState({
+      response: {
+        ok: res.ok,
+        status: res.status,
+        statusText: res.statusText,
+        headers: Array.from(res.headers),
+        body: await res.text(),
+        time: Date.now() - t,
+        tab: app.state.response && app.state.response.tab || 0,
+      }
+    })
     response.type = (response.headers.find(curr => curr[0] == 'content-type') || ['', ''])[1].split(';', 1)[0] || null
     if (response.type === 'application/json') {
       response.json = JSON.parse(response.body)

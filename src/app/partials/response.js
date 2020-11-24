@@ -42,7 +42,9 @@ module.exports = (props, app) => props ? html`
             class="block px05 py05b color-black-40 ul:hover color-inherit:hover"
             onclick=${e => {
               e.preventDefault()
-              app.state.response = null
+              app.setState({
+                response: null,
+              })
               app.saveState()
               app.render()
             }}

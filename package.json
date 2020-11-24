@@ -2,6 +2,7 @@
   "devDependencies": {
     "@lemmon/custom-textarea": "^0.1.1",
     "abrusco": "^0.13.1",
+    "nanocomponent": "^6.5.3",
     "nanohtml": "^1.9.1",
     "nanomorph": "^5.4.2",
     "tinyify": "^3.0.0"
