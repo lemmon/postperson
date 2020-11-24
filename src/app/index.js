@@ -1,6 +1,7 @@
 const html = require('nanohtml')
 const rege = require('./rege')
 const page = require('./pages/default')
+const saveState = require('./utils/save-state')
 
 window.cl = (...args) => {
   args.forEach(arg => console.log('🔍', arg))
@@ -36,4 +37,8 @@ flash.error = (msg) => flash.message('error', msg)
 
 require('@lemmon/custom-textarea')
 
-rege(app => page(app), defaultState).render()
+const app = rege(app => page(app), defaultState)
+
+app.saveState = () => saveState(app.state)
+
+app.render()

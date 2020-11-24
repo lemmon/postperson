@@ -1,5 +1,4 @@
 const html = require('nanohtml')
-const saveState = require('../utils/save-state')
 
 const renderTabs = ({ entries, active, info, onchange }) => html`
   <nav class="row">

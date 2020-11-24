@@ -1,5 +1,4 @@
 const html = require('nanohtml')
-const saveState = require('../utils/save-state')
 const tabs = require('./tabs')
 
 module.exports = (props, app) => props ? html`
@@ -44,7 +43,7 @@ module.exports = (props, app) => props ? html`
             onclick=${e => {
               e.preventDefault()
               app.state.response = null
-              saveState(app.state)
+              app.saveState()
               app.render()
             }}
             href="#"
@@ -53,7 +52,7 @@ module.exports = (props, app) => props ? html`
       `,
       onchange: (index) => {
         props.tab = index
-        saveState(app.state)
+        app.saveState()
         app.render()
       },
     }, app)}

@@ -1,5 +1,4 @@
 const html = require('nanohtml')
-const saveState = require('../utils/save-state')
 const tabs = require('./tabs')
 
 const methods = [
@@ -12,7 +11,7 @@ const methods = [
 
 const handleChange = (e, app) => {
   app.state.request[e.target.name] = e.target.value
-  saveState(app.state)
+  app.saveState()
 }
 
 const handleSubmit = (e, app) => {
@@ -46,7 +45,7 @@ const handleSubmit = (e, app) => {
       response.json = JSON.parse(response.body)
     }
     flash.notice('Response received successfully.')
-    saveState(app.state)
+    app.saveState()
   }).catch(err => {
     flash.error(err.message)
   }).then(() => {
@@ -106,7 +105,7 @@ module.exports = (props, app) => html`
                 }
                 app.state.request.resource = url
                 app.render()
-                saveState(app.state)
+                app.saveState()
               }}
             /></label></div>
           </div>
@@ -172,7 +171,7 @@ module.exports = (props, app) => html`
             ],
             onchange: (index) => {
               props.tab = index
-              saveState(app.state)
+              app.saveState()
               app.render()
             },
           })}
