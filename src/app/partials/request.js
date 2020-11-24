@@ -25,10 +25,12 @@ const handleSubmit = (e, app) => {
   button.disabled = true
   request.loading = true
   const t = Date.now()
-  fetch(request.resource, {
+  const q = new URLSearchParams(parseArgs(request.params)).toString()
+  const url = request.url + (q && `?${q}`)
+  fetch(url, {
     method: request.method,
     body: request.body || undefined,
-    headers: parseHeaders(request.headers),
+    headers: parseArgs(request.headers),
   }).then(async res => {
     const response = app.state.response = {
       ok: res.ok,
@@ -87,7 +89,25 @@ module.exports = (props, app) => html`
               name="resource"
               placeholder="http://"
               required
-              value=${props.resource || ``}
+              value=${props.url && props.resource || ``}
+              onchange=${e => {
+                e.stopPropagation()
+                const value = e.target.value
+                const [url, query] = value.split('?')
+                app.state.request.url = url
+                if (query) {
+                  const params = Array.from(new URL(value).searchParams.entries()).map(x => `${x[0]} = ${x[1]}`)
+                  app.state.request.params = params.join('\n')
+                  app.state.request.paramsCount = params.length
+                  // TODO: hack!
+                  const TA = document.getElementById('f__request__params')
+                  if (TA) TA.value = app.state.request.params
+                  // /hack
+                }
+                app.state.request.resource = url
+                app.render()
+                saveState(app.state)
+              }}
             /></label></div>
           </div>
           <div class="p05"><button
@@ -103,10 +123,27 @@ module.exports = (props, app) => html`
           ${tabs({
             index: props.tab,
             list: [
+              () => html`<span class="ul:hover">Params</span>${props && props.paramsCount ? html`<span class="inlineblock ml025 color-black-40">(${props.paramsCount})</span>` : ``}`,
               () => html`<span class="ul:hover">Body</span>`,
               () => html`<span class="ul:hover">Headers</span>${props && props.headersCount ? html`<span class="inlineblock ml025 color-black-40">(${props.headersCount})</span>` : ``}`,
             ],
             panels: [
+              () => html`
+                <div class="mt1">
+                  <label class="block bg-black-05 code code--block outline:focus-within">${textarea({
+                    id: 'f__request__params',
+                    name: 'params',
+                    value: props.params,
+                    placeholder: 'name=value',
+                    onchange: (e) => {
+                      props.paramsCount = Object.keys(parseArgs(e.target.value)).length
+                      setTimeout(() => {
+                        app.render()
+                      })
+                    },
+                  })}</label>
+                </div>
+              `,
               () => html`
                 <div class="mt1">
                   <label class="block bg-black-05 code code--block outline:focus-within">${textarea({
@@ -124,7 +161,7 @@ module.exports = (props, app) => html`
                     value: props.headers,
                     placeholder: 'name: value',
                     onchange: (e) => {
-                      props.headersCount = Object.keys(parseHeaders(e.target.value)).length
+                      props.headersCount = Object.keys(parseArgs(e.target.value)).length
                       setTimeout(() => {
                         app.render()
                       })
@@ -145,7 +182,7 @@ module.exports = (props, app) => html`
   </div>
 `
 
-function parseHeaders(input) {
+function parseArgs(input) {
   return input && input
     .split(/\n/)
     .map(l => l.trim())
