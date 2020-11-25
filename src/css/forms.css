@@ -19,7 +19,7 @@
 
 .input--select {
   &::after {
-    content: ";";
+    content: ';';
     display: block;
     position: relative;
     width: 50px;
@@ -33,5 +33,5 @@
 
 .input::placeholder {
   color: inherit;
-  opacity: .4;
+  opacity: 0.4;
 }

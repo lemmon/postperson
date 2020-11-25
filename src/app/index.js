@@ -7,7 +7,7 @@ const ToastsContainer = require('./components/Toasts')
 // debugging
 
 window.cl = (...args) => {
-  args.forEach(arg => console.log('🔍', arg))
+  args.forEach((arg) => console.log('🔍', arg))
   return args[0]
 }
 
