@@ -1,0 +1,37 @@
+.toasts-container {
+  --containerWidth: 36rem;
+  position: fixed;
+  z-index: 99999;
+  left: calc(50% - var(--containerWidth) / 2);
+  top: 0;
+  width: var(--containerWidth);
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.toast {
+  margin: 0.25rem;
+  padding: 1rem;
+  border-radius: 4px;
+  position: relative;
+  top: 0;
+  opacity: 1;
+  transition-duration: 200ms;
+}
+
+.toast--loading {
+  top: 0.5rem;
+  opacity: 0;
+}
+
+.toast--notice {
+  background-color: var(--yellow);
+  color: var(--black-80);
+}
+
+.toast--error {
+  background-color: var(--red);
+  background-color: #e53e3e;
+  color: var(--white-90);
+}

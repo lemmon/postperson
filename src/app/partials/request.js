@@ -17,6 +17,7 @@ const handleChange = (e, app) => {
 const handleSubmit = (e, app) => {
   e.preventDefault()
   app.render()
+  const { $toast } = app
   const { request } = app.state
   const form = e.target
   const button = form.querySelector('button')
@@ -46,10 +47,15 @@ const handleSubmit = (e, app) => {
     if (response.type === 'application/json') {
       response.json = JSON.parse(response.body)
     }
-    flash.notice('Response received successfully.')
+    $toast.push({
+      message: 'Response received successfully.',
+    })
     app.saveState()
   }).catch(err => {
-    flash.error(err.message)
+    $toast.push({
+      message: err.message,
+      type: 'error',
+    })
   }).then(() => {
     delete request.loading
     app.render()

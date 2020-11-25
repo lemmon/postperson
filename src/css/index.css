@@ -1,9 +1,9 @@
 @import 'abrusco/base';
 @import 'abrusco/modules';
 
-@import './forms';
 @import './buttons';
-@import './messages';
+@import './forms';
+@import './toasts';
 
 @import 'abrusco/utils';
 @import 'abrusco/debug';

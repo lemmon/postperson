@@ -1,12 +1,21 @@
 const html = require('nanohtml')
 const rege = require('./rege')
-const page = require('./pages/default')
 const saveState = require('./utils/save-state')
+const App = require('./App')
+const ToastsContainer = require('./components/Toasts')
+
+// debugging
 
 window.cl = (...args) => {
   args.forEach(arg => console.log('🔍', arg))
   return args[0]
 }
+
+// custom components
+
+require('@lemmon/custom-textarea')
+
+// default state
 
 const defaultState = {
   request: {},
@@ -14,31 +23,18 @@ const defaultState = {
 }
 if (!defaultState.request) defaultState.request = {}
 
-const messageTypes = {
-  error: 'flash__message--error',
-  notice: 'flash__message--notice',
-}
+// app
 
-flash.message = (type, text) => {
-  const el = document.createElement('div')
-  el.className = `flash__message ${messageTypes[type]}`
-  el.textContent = text
-  flash.appendChild(el)
-  setTimeout(() => {
-    el.style.opacity = 0
-  }, 2000)
-  setTimeout(() => {
-    flash.removeChild(el)
-  }, 2500)
-}
+const app = rege(App, defaultState)
 
-flash.notice = (msg) => flash.message('notice', msg)
-flash.error = (msg) => flash.message('error', msg)
+// toasts
 
-require('@lemmon/custom-textarea')
+app.$toast = new ToastsContainer(app)
 
-const app = rege(app => page(app), defaultState)
+// utils
 
 app.saveState = () => saveState(app.state)
+
+// mount & run
 
 app.render()
