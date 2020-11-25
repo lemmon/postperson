@@ -12,6 +12,7 @@ async function processCSS(input, html) {
     content: [{ raw: html, extension: 'html' }],
     css: [{ raw: input }],
     defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+    variables: true,
   })
   const abruscoCSSResult = await abrusco(purgeCSSResult[0].css, {
     from: undefined,
