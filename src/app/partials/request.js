@@ -1,5 +1,5 @@
 const html = require('nanohtml')
-const tabs = require('./tabs')
+const renderTabs = require('./tabs')
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
@@ -65,7 +65,8 @@ const handleSubmit = (e, app) => {
 
 const textarea = (props) => {
   const el = document.createElement('custom-textarea')
-  el.className = 'input input--textarea p1'
+  el.className = 'input input--textarea'
+  el.style = 'padding: 16px 20px'
   el.id = props.id
   el.name = props.name
   el.value = props.value || ''
@@ -75,75 +76,73 @@ const textarea = (props) => {
 }
 
 module.exports = (props, app) => html`
-  <div class="p1 lh4">
+  <div class="p15 lh4">
     <form
       onchange=${(e) => handleChange(e, app)}
       onsubmit=${(e) => handleSubmit(e, app)}
     >
-      <div class="p05">
-        <div class="row">
-          <div class="span1 row">
-            <div class="p05">
-              <label class="block px075 row bg-black-05 outline:focus-within"
-                ><select class="input input--select px025 py1" name="method">
-                  ${methods.map(
-                    (curr) => html`
-                      <option selected=${curr === props.method}>${curr}</option>
-                    `
-                  )}
-                </select>
-                <div class="px025 py1">↓</div></label
-              >
-            </div>
-            <div class="p05 span1">
-              <label class="block outline:focus-within"
-                ><input
-                  class="input p1 bg-black-05"
-                  type="text"
-                  name="resource"
-                  placeholder="http://"
-                  required
-                  value=${(props.url && props.resource) || ``}
-                  onchange=${(e) => {
-                    e.stopPropagation()
-                    const value = e.target.value
-                    const [url, query] = value.split('?')
-                    app.state.request.url = url
-                    if (query) {
-                      const params = Array.from(
-                        new URL(value).searchParams.entries()
-                      ).map((x) => `${x[0]} = ${x[1]}`)
-                      app.state.request.params = params.join('\n')
-                      app.state.request.paramsCount = params.length
-                      // TODO: hack!
-                      const TA = document.getElementById('f__request__params')
-                      if (TA) TA.value = app.state.request.params
-                      // /hack
-                    }
-                    app.state.request.resource = url
-                    app.render()
-                    app.saveState()
-                  }}
-              /></label>
-            </div>
-          </div>
-          <div class="p05">
-            <button
-              class="button ${props.loading
-                ? `button--loading`
-                : ``} bg-black px2 py1 outline:focus"
-              type="submit"
-              disabled=${!!props.loading}
-            >
-              <div class="button__caption color-white fw500">Send</div>
-              <div class="button__loader color-white"></div>
-            </button>
-          </div>
+      <div class="row">
+        <div class="p05">
+          <label class="block px075 row bg-black-05 outline:focus-within"
+            ><select class="input input--select px025 py1" name="method">
+              ${methods.map(
+                (curr) => html`
+                  <option selected=${curr === props.method}>${curr}</option>
+                `
+              )}
+            </select>
+            <div class="px025 py1">↓</div></label
+          >
+        </div>
+        <div class="p05 span1">
+          <label class="block outline:focus-within"
+            ><input
+              class="input p1 bg-black-05"
+              type="text"
+              name="resource"
+              placeholder="http://"
+              required
+              value=${(props.url && props.resource) || ``}
+              onchange=${(e) => {
+                e.stopPropagation()
+                const value = e.target.value
+                const [url, query] = value.split('?')
+                app.state.request.url = url
+                if (query) {
+                  const params = Array.from(
+                    new URL(value).searchParams.entries()
+                  ).map((x) => `${x[0]} = ${x[1]}`)
+                  app.state.request.params = params.join('\n')
+                  app.state.request.paramsCount = params.length
+                  // TODO: hack!
+                  const TA = document.getElementById('f__request__params')
+                  if (TA) TA.value = app.state.request.params
+                  // /hack
+                }
+                app.state.request.resource = url
+                app.render()
+                app.saveState()
+              }}
+          /></label>
         </div>
         <div class="p05">
-          ${tabs({
-            index: props.tab,
-            list: [
+          <button
+            class="button ${props.loading
+              ? `button--loading`
+              : ``} bg-black px2 py1 outline:focus"
+            type="submit"
+            disabled=${!!props.loading}
+          >
+            <div class="button__caption color-white fw500">Send</div>
+            <div class="button__loader color-white"></div>
+          </button>
+        </div>
+      </div>
+      <div class="p05">
+        ${renderTabs({
+          index: props.tab,
+          tabs: [
+            [
               () =>
                 html`<span class="ul:hover">Params</span>${props &&
                   props.paramsCount
@@ -151,7 +150,40 @@ module.exports = (props, app) => html`
                         >(${props.paramsCount})</span
                       >`
                     : ``}`,
+              () => html`
+                <label
+                  class="block bg-black-05 code code--block outline:focus-within"
+                  >${textarea({
+                    id: 'f__request__params',
+                    name: 'params',
+                    value: props.params,
+                    placeholder: 'name=value',
+                    onchange: (e) => {
+                      props.paramsCount = Object.keys(
+                        parseArgs(e.target.value)
+                      ).length
+                      setTimeout(() => {
+                        app.render()
+                      })
+                    },
+                  })}</label
+                >
+              `,
+            ],
+            [
               () => html`<span class="ul:hover">Body</span>`,
+              () => html`
+                <label
+                  class="block bg-black-05 code code--block outline:focus-within"
+                  >${textarea({
+                    id: 'f__request__body',
+                    name: 'body',
+                    value: props.body,
+                  })}</label
+                >
+              `,
+            ],
+            [
               () =>
                 html`<span class="ul:hover">Headers</span>${props &&
                   props.headersCount
@@ -159,70 +191,33 @@ module.exports = (props, app) => html`
                         >(${props.headersCount})</span
                       >`
                     : ``}`,
-            ],
-            panels: [
               () => html`
-                <div class="mt1">
-                  <label
-                    class="block bg-black-05 code code--block outline:focus-within"
-                    >${textarea({
-                      id: 'f__request__params',
-                      name: 'params',
-                      value: props.params,
-                      placeholder: 'name=value',
-                      onchange: (e) => {
-                        props.paramsCount = Object.keys(
-                          parseArgs(e.target.value)
-                        ).length
-                        setTimeout(() => {
-                          app.render()
-                        })
-                      },
-                    })}</label
-                  >
-                </div>
-              `,
-              () => html`
-                <div class="mt1">
-                  <label
-                    class="block bg-black-05 code code--block outline:focus-within"
-                    >${textarea({
-                      id: 'f__request__body',
-                      name: 'body',
-                      value: props.body,
-                    })}</label
-                  >
-                </div>
-              `,
-              () => html`
-                <div class="mt1">
-                  <label
-                    class="block bg-black-05 code code--block outline:focus-within"
-                    >${textarea({
-                      id: 'f__request__headers',
-                      name: 'headers',
-                      value: props.headers,
-                      placeholder: 'name: value',
-                      onchange: (e) => {
-                        props.headersCount = Object.keys(
-                          parseArgs(e.target.value)
-                        ).length
-                        setTimeout(() => {
-                          app.render()
-                        })
-                      },
-                    })}</label
-                  >
-                </div>
+                <label
+                  class="block bg-black-05 code code--block outline:focus-within"
+                  >${textarea({
+                    id: 'f__request__headers',
+                    name: 'headers',
+                    value: props.headers,
+                    placeholder: 'name: value',
+                    onchange: (e) => {
+                      props.headersCount = Object.keys(
+                        parseArgs(e.target.value)
+                      ).length
+                      setTimeout(() => {
+                        app.render()
+                      })
+                    },
+                  })}</label
+                >
               `,
             ],
-            onchange: (index) => {
-              props.tab = index
-              app.saveState()
-              app.render()
-            },
-          })}
-        </div>
+          ],
+          onchange: (index) => {
+            props.tab = index
+            app.saveState()
+            app.render()
+          },
+        })}
       </div>
     </form>
   </div>

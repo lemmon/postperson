@@ -1,10 +1,10 @@
 const html = require('nanohtml')
 
-const renderTabs = ({ entries, active, info, onchange }) => html`
+const renderTabs = ({ tabs, active, info, onchange }) => html`
   <nav class="row">
     <ul class="row">
-      ${entries.map(
-        (curr, index) => html`
+      ${tabs.map(
+        ([curr], index) => html`
           <li
             class="${curr === active ? `bt bl br` : `bb`}"
             style="${curr === active
@@ -31,17 +31,17 @@ const renderTabs = ({ entries, active, info, onchange }) => html`
 `
 
 module.exports = (props, app) => {
-  const index = props.index && props.panels[props.index] ? props.index : 0
+  const index = props.index && props.tabs[props.index] ? props.index : 0
   return html`
     <div>
       ${renderTabs({
-        entries: props.list,
-        active: props.list[index],
+        tabs: props.tabs,
+        active: props.tabs[index][0],
         info: props.info,
         onchange: props.onchange,
       })}
-      <div>
-        ${props.panels[index]()}
+      <div class="mt1">
+        ${props.tabs[index][1]()}
       </div>
     </div>
   `

@@ -1,50 +1,61 @@
 const html = require('nanohtml')
-const tabs = require('./tabs')
+const renderTabs = require('./tabs')
 
 module.exports = (props, app) =>
   props
     ? html`
         <section class="p2 lh4">
-          ${tabs(
+          ${renderTabs(
             {
               index: props.tab,
-              list: [
-                () => html`<span class="ul:hover">Body</span>`,
-                () =>
-                  html`<span class="ul:hover">Headers</span>${props
-                      ? html`<span class="inlineblock ml025 color-black-40"
-                          >(${props.headers.length})</span
-                        >`
-                      : ``}`,
-              ],
-              panels: [
-                () => html`
-                  <div class="mt1 code code--block">
-                    <pre style="white-space: pre-wrap; word-wrap: break-word;">
-${props.json ? JSON.stringify(props.json, null, 2) : props.body}</pre
+              tabs: [
+                [
+                  () => html`<span class="ul:hover">Body</span>`,
+                  () => html`
+                    <div
+                      class="code code--block bg-black-05"
+                      style="padding: 16px 20px;"
                     >
-                  </div>
-                `,
-                () => html`
-                  <div class="mt1 code code--block">
-                    <table>
-                      ${props.headers.map(
-                        ([name, value]) => html`
-                          <tr>
-                            <td class="color-black-60">
-                              ${name}:<span
-                                class="inlineblock o0"
-                                style="width: 2ch;"
-                                >:</span
-                              >
-                            </td>
-                            <td class="ml1">${value}</td>
-                          </tr>
-                        `
-                      )}
-                    </table>
-                  </div>
-                `,
+                      ${Object.assign(document.createElement('pre'), {
+                        style: 'white-space: pre-wrap; word-wrap: break-word;',
+                        textContent: props.json
+                          ? JSON.stringify(props.json, null, 2)
+                          : props.body,
+                      })}
+                    </div>
+                  `,
+                ],
+                [
+                  () =>
+                    html`<span class="ul:hover">Headers</span>${props
+                        ? html`<span class="inlineblock ml025 color-black-40"
+                            >(${props.headers.length})</span
+                          >`
+                        : ``}`,
+                  () => html`
+                    <div
+                      class="code code--block bg-black-05"
+                      style="padding: 16px 20px;"
+                    >
+                      <table>
+                        ${props.headers.map(
+                          ([name, value]) => html`
+                            <tr>
+                              <td class="color-black-60">
+                                ${name}:<span
+                                  class="inlineblock o0"
+                                  style="width: 2ch;"
+                                  >:</span
+                                >
+                              </td>
+                              <td class="ml1">${value}</td>
+                            </tr>
+                          `
+                        )}
+                      </table>
+                    </div>
+                  `,
+                ],
               ],
               info: () => html`
                 <dl class="px05 row">
