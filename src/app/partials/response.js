@@ -1,4 +1,5 @@
 const html = require('nanohtml')
+const formatNumber = require('../utils/format-number')
 const renderTabs = require('./tabs')
 
 module.exports = (props, app) =>
@@ -68,9 +69,13 @@ module.exports = (props, app) =>
                     ${props.status} ${props.statusText}
                   </dd>
                   <dt class="px05 py05b pr025 color-black-40">Time:</dt>
-                  <dd class="px05 py05b pl025">${props.time} ms</dd>
+                  <dd class="px05 py05b pl025">
+                    ${formatNumber(props.time)} ms
+                  </dd>
                   <dt class="px05 py05b pr025 color-black-40">Size:</dt>
-                  <dd class="px05 py05b pl025">${props.body.length} B</dd>
+                  <dd class="px05 py05b pl025">
+                    ${formatNumber(props.body.length)} B
+                  </dd>
                 </dl>
                 <div class="px05">
                   <a
