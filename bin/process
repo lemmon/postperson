@@ -38,7 +38,10 @@ async function main() {
       )))
         .then(x => x.join())
         .then(x => (
-          x.replace(/\\n\s+/g, '')
+          x
+            .replace(/(?<=\[)"\\n\s*",/g, '')
+            .replace(/,"\\n\s*"(?=[\],])/g, '')
+            .replace(/(?<=\w)\\n\s*(?=")/g, '')
         ))
         .then(x => (
           html
