@@ -1,15 +1,13 @@
-const morph = require('nanomorph')
-const Container = require('./components-container')
+const { html, render } = require('uhtml')
 
 const HISTORY_OBJECT = {}
 
-module.exports = (renderPage, initialState = {}) => {
+module.exports = (App, initialState = {}) => {
   const rootPath = initialState.rootPath || ''
   const state = {
     rootPath,
     ...initialState,
   }
-  const components = new Container()
 
   const app = {
     // path
@@ -24,9 +22,6 @@ module.exports = (renderPage, initialState = {}) => {
       ((path && rootPath + path.replace(/(.)\/+$/, '$1')) ||
         (app.path && rootPath + app.path[0]) ||
         rootPath + '/') + appendQuery(query),
-    // components
-    component: (Component, props = {}) =>
-      components.render(Component, app, props),
   }
 
   // location
@@ -42,8 +37,9 @@ module.exports = (renderPage, initialState = {}) => {
       e.altKey ||
       e.shiftKey ||
       e.defaultPrevented
-    )
+    ) {
       return
+    }
 
     const anchor = e.target.closest('a[href]')
     if (!anchor || anchor.target) return
@@ -75,7 +71,7 @@ module.exports = (renderPage, initialState = {}) => {
   }
   // render
   app.render = () => {
-    morph(window.app, renderPage(app))
+    render(window.app, App(app))
   }
 
   return app

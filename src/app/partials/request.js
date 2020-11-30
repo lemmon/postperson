@@ -1,4 +1,4 @@
-const html = require('nanohtml')
+const { html } = require('uhtml')
 const renderTabs = require('./tabs')
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
@@ -6,18 +6,13 @@ const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 const handleChange = (e, app) => {
   app.state.request[e.target.name] = e.target.value
   app.saveState()
+  app.render()
 }
 
 const handleSubmit = (e, app) => {
   e.preventDefault()
-  app.render()
   const { $toast } = app
   const { request } = app.state
-  const form = e.target
-  const button = form.querySelector('button')
-  button.classList.add('button--loading')
-  button.disabled = true
-  request.loading = true
   const t = Date.now()
   const q = new URLSearchParams(parseArgs(request.params)).toString()
   const url = request.url + (q && `?${q}`)
@@ -61,18 +56,8 @@ const handleSubmit = (e, app) => {
       delete request.loading
       app.render()
     })
-}
-
-const textarea = (props) => {
-  const el = document.createElement('custom-textarea')
-  el.className = 'input input--textarea'
-  el.style = 'padding: 16px 20px'
-  el.id = props.id
-  el.name = props.name
-  el.value = props.value || ''
-  if (props.placeholder) el.placeholder = props.placeholder
-  if (props.onchange) el.onchange = props.onchange
-  return el
+  request.loading = true
+  app.render()
 }
 
 module.exports = (props, app) => html`
@@ -87,7 +72,9 @@ module.exports = (props, app) => html`
             ><select class="input input--select px025 py1" name="method">
               ${methods.map(
                 (curr) => html`
-                  <option selected=${curr === props.method}>${curr}</option>
+                  <option selected=${curr === props.method || null}
+                    >${curr}</option
+                  >
                 `
               )}
             </select>
@@ -102,7 +89,7 @@ module.exports = (props, app) => html`
               name="resource"
               placeholder="http://"
               required
-              value=${(props.url && props.resource) || ``}
+              .value=${(props.url && props.resource) || ``}
               onchange=${(e) => {
                 e.stopPropagation()
                 const value = e.target.value
@@ -114,10 +101,6 @@ module.exports = (props, app) => html`
                   ).map((x) => `${x[0]} = ${x[1]}`)
                   app.state.request.params = params.join('\n')
                   app.state.request.paramsCount = params.length
-                  // TODO: hack!
-                  const TA = document.getElementById('f__request__params')
-                  if (TA) TA.value = app.state.request.params
-                  // /hack
                 }
                 app.state.request.resource = url
                 app.render()
@@ -127,11 +110,11 @@ module.exports = (props, app) => html`
         </div>
         <div class="p05">
           <button
-            class="button ${props.loading
-              ? `button--loading`
-              : ``} bg-black px2 py1 outline:focus"
             type="submit"
-            disabled=${!!props.loading}
+            class=${`button ${
+              props.loading ? `button--loading` : ``
+            } bg-black px2 py1 outline:focus`}
+            disabled=${!!props.loading || null}
           >
             <div class="button__caption color-white fw500">Send</div>
             <div class="button__loader color-white"></div>
@@ -144,30 +127,30 @@ module.exports = (props, app) => html`
           tabs: [
             [
               () =>
-                html`<span class="ul:hover">Params</span>${props &&
-                  props.paramsCount
-                    ? html`<span class="inlineblock ml025 color-black-40"
-                        >(${props.paramsCount})</span
-                      >`
-                    : ``}`,
+                html`<span class="ul:hover">Params</span>${props.paramsCount &&
+                  html`<span class="inlineblock ml025 color-black-40"
+                    >(${props.paramsCount})</span
+                  >`}`,
               () => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
-                  >${textarea({
-                    id: 'f__request__params',
-                    name: 'params',
-                    value: props.params,
-                    placeholder: 'name=value',
-                    onchange: (e) => {
+                >
+                  <custom-textarea
+                    class="input input--textarea"
+                    style="padding: 16px 20px;"
+                    name="params"
+                    placeholder="name=value"
+                    .value=${props.params}
+                    onchange=${(e) => {
                       props.paramsCount = Object.keys(
                         parseArgs(e.target.value)
                       ).length
                       setTimeout(() => {
                         app.render()
                       })
-                    },
-                  })}</label
-                >
+                    }}
+                  />
+                </label>
               `,
             ],
             [
@@ -175,40 +158,41 @@ module.exports = (props, app) => html`
               () => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
-                  >${textarea({
-                    id: 'f__request__body',
-                    name: 'body',
-                    value: props.body,
-                  })}</label
                 >
+                  <custom-textarea
+                    name="body"
+                    style="padding: 16px 20px;"
+                    .value=${props.body}
+                  />
+                </label>
               `,
             ],
             [
               () =>
-                html`<span class="ul:hover">Headers</span>${props &&
-                  props.headersCount
-                    ? html`<span class="inlineblock ml025 color-black-40"
-                        >(${props.headersCount})</span
-                      >`
-                    : ``}`,
+                html`<span class="ul:hover">Headers</span
+                  >${props.headersCount &&
+                  html`<span class="inlineblock ml025 color-black-40"
+                    >(${props.headersCount})</span
+                  >`}`,
               () => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
-                  >${textarea({
-                    id: 'f__request__headers',
-                    name: 'headers',
-                    value: props.headers,
-                    placeholder: 'name: value',
-                    onchange: (e) => {
+                >
+                  <custom-textarea
+                    name="headers"
+                    style="padding: 16px 20px;"
+                    placeholder="name: value"
+                    .value=${props.headers}
+                    onchange="${(e) => {
                       props.headersCount = Object.keys(
                         parseArgs(e.target.value)
                       ).length
                       setTimeout(() => {
                         app.render()
                       })
-                    },
-                  })}</label
-                >
+                    }},"
+                  />
+                </label>
               `,
             ],
           ],

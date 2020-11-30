@@ -1,4 +1,4 @@
-const html = require('nanohtml')
+const { html } = require('uhtml')
 const formatNumber = require('../utils/format-number')
 const renderTabs = require('./tabs')
 
@@ -17,12 +17,11 @@ module.exports = (props, app) =>
                       class="code code--block bg-black-05"
                       style="padding: 16px 20px;"
                     >
-                      ${Object.assign(document.createElement('pre'), {
-                        style: 'white-space: pre-wrap; word-wrap: break-word;',
-                        textContent: props.json
-                          ? JSON.stringify(props.json, null, 2)
-                          : props.body,
-                      })}
+                      <pre
+                        style="white-space: pre-wrap; word-wrap: break-word;"
+                      >
+${props.json ? JSON.stringify(props.json, null, 2) : props.body}</pre
+                      >
                     </div>
                   `,
                 ],
@@ -44,10 +43,9 @@ module.exports = (props, app) =>
                             <tr>
                               <td class="color-black-60">
                                 ${name}:<span
-                                  class="inlineblock o0"
+                                  class="inlineblock"
                                   style="width: 2ch;"
-                                  >:</span
-                                >
+                                ></span>
                               </td>
                               <td class="ml1">${value}</td>
                             </tr>
@@ -62,9 +60,9 @@ module.exports = (props, app) =>
                 <dl class="px05 row">
                   <dt class="px05 py05b pr025 color-black-40">Status:</dt>
                   <dd
-                    class="px05 py05b pl025 ${props.ok
-                      ? `color-green`
-                      : `color-red`}"
+                    class=${`px05 py05b pl025 ${
+                      props.ok ? `color-green` : `color-red`
+                    }`}
                   >
                     ${props.status} ${props.statusText}
                   </dd>

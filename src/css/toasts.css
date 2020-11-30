@@ -1,16 +1,16 @@
-.toasts-container {
-  --containerWidth: 36rem;
+toasts-container {
+  --width: 36rem;
   position: fixed;
   z-index: 99999;
-  left: calc(50% - var(--containerWidth) / 2);
+  left: calc(50% - var(--width) / 2);
   top: 0;
-  width: var(--containerWidth);
+  width: var(--width);
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
 }
 
-.toast {
+toast-item {
   margin: 0.25rem;
   padding: 1rem;
   border-radius: 4px;
@@ -20,17 +20,17 @@
   transition-duration: 200ms;
 }
 
-.toast--loading {
+toast-item[loading] {
   top: 0.5rem;
   opacity: 0;
 }
 
-.toast--notice {
+toast-item[type='notice'] {
   background-color: var(--yellow);
   color: var(--black-80);
 }
 
-.toast--error {
+toast-item[type='error'] {
   background-color: var(--red);
   background-color: #e53e3e;
   color: var(--white-90);

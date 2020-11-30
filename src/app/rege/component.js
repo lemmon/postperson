@@ -1,43 +1,55 @@
-const NanoComponent = require('nanocomponent')
-const Container = require('./components-container')
+const { render, html } = require('uhtml')
+const noop = require('../utils/noop')
 
-module.exports = class Component extends NanoComponent {
-  constructor(app, props = {}) {
+module.exports = class extends HTMLElement {
+  constructor() {
     super()
-    this.app = app
-    this.props = props
-    this.state = {
-      ...this.initialState(props, this),
-      ...((typeof props.initialState === 'function' &&
-        props.initialState(props, this)) ||
-        props.initialState),
+    this._props = {}
+    this._state = {
+      // initial state getter
+      ...this.initialState,
     }
-    this._components = new Container()
+    // initial state attribute
+    Object.defineProperty(this, 'initialState', {
+      configurable: true,
+      set: (x) => {
+        Object.assign(this._state, x)
+        Object.defineProperty(this, 'initialState', {
+          set: noop,
+        })
+      },
+    })
+    // render
+    this.render = render.bind(null, this, this.render.bind(this))
   }
 
-  initialState() {
-    return {}
+  render() {}
+  connected() {}
+  disconnected() {}
+
+  connectedCallback() {
+    this.connected()
+    this.render()
+  }
+
+  attr(attributeName) {
+    return this.getAttribute(attributeName)
+  }
+
+  set props(props) {
+    this._props = props
+    this.render()
+  }
+
+  get props() {
+    return this._props
+  }
+
+  get state() {
+    return this._state
   }
 
   setState(...newStates) {
-    return Object.assign(this.state, ...newStates)
-  }
-
-  render(props) {
-    return super.render(props || this.props)
-  }
-
-  rerender() {
-    if (!this.element) return
-    this._rerender = true
-    super.render(...this._arguments)
-  }
-
-  update() {
-    return true
-  }
-
-  component(Component, props = {}) {
-    return this._components.render(Component, this.app, props)
+    Object.assign(this._state, ...newStates)
   }
 }

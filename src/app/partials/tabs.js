@@ -1,4 +1,4 @@
-const html = require('nanohtml')
+const { html } = require('uhtml')
 
 const renderTabs = ({ tabs, active, info, onchange }) => html`
   <nav class="row">

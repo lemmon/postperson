@@ -1,19 +1,18 @@
-const html = require('nanohtml')
 const rege = require('./rege')
 const saveState = require('./utils/save-state')
 const App = require('./App')
-const ToastsContainer = require('./components/Toasts')
 
 // debugging
 
 window.cl = (...args) => {
-  args.forEach((arg) => console.log('🔍', arg))
+  console.log('👋', ...args)
   return args[0]
 }
 
-// custom components
+// components
 
 require('@lemmon/custom-textarea')
+require('./components/Toasts')
 
 // default state
 
@@ -26,10 +25,6 @@ if (!defaultState.request) defaultState.request = {}
 // app
 
 const app = rege(App, defaultState)
-
-// toasts
-
-app.$toast = new ToastsContainer(app)
 
 // utils
 
