@@ -1,3 +1,3 @@
 #!/bin/sh
 
-browserify src/app -t nanohtml -p tinyify | babel-env | minify > public/build/bundle.js
+browserify src/app -p tinyify | babel-env | minify > public/build/bundle.js
