@@ -72,9 +72,9 @@ module.exports = (props, app) => html`
             ><select class="input input--select px025 py1" name="method">
               ${methods.map(
                 (curr) => html`
-                  <option selected=${curr === props.method || null}
-                    >${curr}</option
-                  >
+                  <option selected=${curr === props.method || null}>
+                    ${curr}
+                  </option>
                 `
               )}
             </select>

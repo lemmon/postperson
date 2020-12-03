@@ -40,9 +40,7 @@ module.exports = (props, app) => {
         info: props.info,
         onchange: props.onchange,
       })}
-      <div class="mt1">
-        ${props.tabs[index][1]()}
-      </div>
+      <div class="mt1">${props.tabs[index][1]()}</div>
     </div>
   `
 }
