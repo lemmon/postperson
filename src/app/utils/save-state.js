@@ -1,4 +1,4 @@
-module.exports = (state) => {
+export default (state) => {
   window.localStorage.setItem(
     'postperson',
     JSON.stringify({

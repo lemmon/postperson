@@ -1,8 +1,8 @@
-const { html } = require('uhtml')
-const formatNumber = require('../utils/format-number')
-const renderTabs = require('./tabs')
+import { html } from 'uhtml'
+import formatNumber from '../utils/format-number'
+import renderTabs from './tabs'
 
-module.exports = (props, app) =>
+export default (props, app) =>
   props
     ? html`
         <section class="p2 lh4">

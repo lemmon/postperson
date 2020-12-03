@@ -1,8 +1,8 @@
-const { html } = require('uhtml')
-const renderRequest = require('./partials/request')
-const renderResponse = require('./partials/response')
+import { html } from 'uhtml'
+import renderRequest from './partials/request'
+import renderResponse from './partials/response'
 
-module.exports = (app) => html`
+export default (app) => html`
   <toasts-container
     ref=${(x) => {
       app.$toast = x

@@ -11,7 +11,7 @@ async function processCSS(input, html) {
   const purgeCSSResult = await new PurgeCSS().purge({
     content: [{ raw: html, extension: 'html' }],
     css: [{ raw: input }],
-    defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
+    defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
     // variables: true,
   })
   const abruscoCSSResult = await abrusco(purgeCSSResult[0].css, {
@@ -24,47 +24,54 @@ async function processCSS(input, html) {
 
 async function main() {
   // read input file
-  await fs.readFile(inputFile, 'utf8')
-    .then(html => (
+  await fs
+    .readFile(inputFile, 'utf8')
+    .then((html) =>
       // remove whitespace
-      html
-        .replace(/^\s+/gm, '')
-        .replace(/\n+/g, '')
-    ))
-    .then(html => (
+      html.replace(/^\s+/gm, '').replace(/\n+/g, '')
+    )
+    .then((html) =>
       // process JS
-      Promise.all([...html.matchAll(/<script src="([^"]+\.js)"><\/script>/g)].map(([m, href]) => (
-        fs.readFile(path.resolve(path.dirname(outputFile), href), 'utf8')
-      )))
-        .then(x => x.join())
-        .then(x => (
-          x // minify html templates
-            .replace(/\n\s*(?=[<>])/g, '')
+      Promise.all(
+        [
+          ...html.matchAll(/<script src="([^"]+\.js)"><\/script>/g),
+        ].map(([m, href]) =>
+          fs.readFile(path.resolve(path.dirname(outputFile), href), 'utf8')
+        )
+      )
+        .then((x) => x.join())
+        .then((x) =>
+          // minify html templates
+          x
+            .trim()
+            .replace(/\n\s*(?=[<>`/])/g, '')
             .replace(/(?<=>)\n\s*/g, '')
             .replace(/\n\s*/g, ' ')
-        ))
-        .then(x => (
+        )
+        .then((x) =>
           html
             .replace(/<script src="[^"]+\.js"><\/script>/g, '')
             .replace(/(?=<\/body>)/, `<script>${x}</script>`)
-        ))
-    ))
-    .then(html => (
+        )
+    )
+    .then((html) =>
       // process CSS
-      Promise.all([...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)">/g)].map(([m, href]) => (
-        fs.readFile(path.resolve(path.dirname(inputFile), href), 'utf8')
-      )))
-        .then(x => x.join())
-        .then(x => processCSS(x, html))
-        .then(x => (
+      Promise.all(
+        [
+          ...html.matchAll(/<link rel="stylesheet" href="([^"]+\.css)">/g),
+        ].map(([, href]) =>
+          fs.readFile(path.resolve(path.dirname(inputFile), href), 'utf8')
+        )
+      )
+        .then((x) => x.join())
+        .then((x) => processCSS(x, html))
+        .then((x) =>
           html
             .replace(/<link rel="stylesheet" href="[^"]+\.css">/g, '')
             .replace(/(?=<\/head>)/, `<style>${x}</style>`)
-        ))
-    ))
-    .then(x => (
-      fs.writeFile(outputFile, x, 'utf8')
-    ))
+        )
+    )
+    .then((x) => fs.writeFile(outputFile, x, 'utf8'))
 }
 
 main().then(() => {

@@ -1,5 +1,5 @@
-const { html } = require('uhtml')
-const Component = require('../rege/Component')
+import { html } from 'uhtml'
+import Component from '../rege/Component'
 
 customElements.define(
   'toasts-container',
