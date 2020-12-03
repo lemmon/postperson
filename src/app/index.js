@@ -11,7 +11,7 @@ window.cl = (...args) => {
 
 // components
 
-require('@lemmon/custom-textarea')
+require('./components/Textarea')
 require('./components/Toasts')
 
 // default state

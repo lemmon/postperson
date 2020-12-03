@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-    "@lemmon/custom-textarea": "^0.1.1",
     "abrusco": "^0.13.1",
     "tinyify": "^3.0.0",
     "uhtml": "^2.1.4"

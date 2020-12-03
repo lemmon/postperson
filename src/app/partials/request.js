@@ -72,9 +72,9 @@ module.exports = (props, app) => html`
             ><select class="input input--select px025 py1" name="method">
               ${methods.map(
                 (curr) => html`
-                  <option selected=${curr === props.method || null}
-                    >${curr}</option
-                  >
+                  <option selected=${curr === props.method || null}>
+                    ${curr}
+                  </option>
                 `
               )}
             </select>
@@ -140,7 +140,6 @@ module.exports = (props, app) => html`
                     style="padding: 16px 20px;"
                     name="params"
                     placeholder="name=value"
-                    .value=${props.params}
                     onchange=${(e) => {
                       props.paramsCount = Object.keys(
                         parseArgs(e.target.value)
@@ -149,7 +148,8 @@ module.exports = (props, app) => html`
                         app.render()
                       })
                     }}
-                  />
+                    >${cl(props.params, '🦑')}</custom-textarea
+                  >
                 </label>
               `,
             ],
@@ -159,11 +159,9 @@ module.exports = (props, app) => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
                 >
-                  <custom-textarea
-                    name="body"
-                    style="padding: 16px 20px;"
-                    .value=${props.body}
-                  />
+                  <custom-textarea name="body" style="padding: 16px 20px;"
+                    >${props.body}</custom-textarea
+                  >
                 </label>
               `,
             ],
@@ -182,7 +180,6 @@ module.exports = (props, app) => html`
                     name="headers"
                     style="padding: 16px 20px;"
                     placeholder="name: value"
-                    .value=${props.headers}
                     onchange="${(e) => {
                       props.headersCount = Object.keys(
                         parseArgs(e.target.value)
@@ -191,7 +188,8 @@ module.exports = (props, app) => html`
                         app.render()
                       })
                     }},"
-                  />
+                    >${props.headers}</custom-textarea
+                  >
                 </label>
               `,
             ],
