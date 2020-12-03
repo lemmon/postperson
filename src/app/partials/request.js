@@ -1,5 +1,5 @@
-const { html } = require('uhtml')
-const renderTabs = require('./tabs')
+import { html } from 'uhtml'
+import renderTabs from './tabs'
 
 const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
@@ -60,7 +60,7 @@ const handleSubmit = (e, app) => {
   app.render()
 }
 
-module.exports = (props, app) => html`
+export default (props, app) => html`
   <div class="p15 lh4">
     <form
       onchange=${(e) => handleChange(e, app)}

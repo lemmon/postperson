@@ -1,6 +1,6 @@
-const rege = require('./rege')
-const saveState = require('./utils/save-state')
-const App = require('./App')
+import rege from './rege/index'
+import saveState from './utils/save-state'
+import App from './App'
 
 // debugging
 
@@ -11,8 +11,8 @@ window.cl = (...args) => {
 
 // components
 
-require('@lemmon/custom-textarea')
-require('./components/Toasts')
+import './components/Textarea'
+import './components/Toasts'
 
 // default state
 

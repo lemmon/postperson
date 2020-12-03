@@ -1,7 +1,7 @@
-const { render, html } = require('uhtml')
-const noop = require('../utils/noop')
+import { render } from 'uhtml'
+import noop from '../utils/noop'
 
-module.exports = class extends HTMLElement {
+export default class extends HTMLElement {
   constructor() {
     super()
     this._props = {}

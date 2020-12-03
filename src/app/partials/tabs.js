@@ -1,4 +1,4 @@
-const { html } = require('uhtml')
+import { html } from 'uhtml'
 
 const renderTabs = ({ tabs, active, info, onchange }) => html`
   <nav class="row">
@@ -30,7 +30,7 @@ const renderTabs = ({ tabs, active, info, onchange }) => html`
   </nav>
 `
 
-module.exports = (props, app) => {
+export default (props, app) => {
   const index = props.index && props.tabs[props.index] ? props.index : 0
   return html`
     <div>

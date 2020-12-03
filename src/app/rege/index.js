@@ -1,8 +1,8 @@
-const { html, render } = require('uhtml')
+import { render } from 'uhtml'
 
 const HISTORY_OBJECT = {}
 
-module.exports = (App, initialState = {}) => {
+export default (App, initialState = {}) => {
   const rootPath = initialState.rootPath || ''
   const state = {
     rootPath,
