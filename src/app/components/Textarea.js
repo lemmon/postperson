@@ -1,8 +1,7 @@
 const { html } = require('uhtml')
 const Component = require('../rege/Component')
 const el = require('../utils/el')
-
-const css = (x) => x
+const css = require('../utils/ret')
 
 const style = css`
   :host {
@@ -39,10 +38,18 @@ const style = css`
     opacity: var(--placeholder-opacity, 0.5);
   }
   .preview {
+    display: flex;
+    flex-direction: row;
+    color: transparent;
+  }
+  .preview__minlines {
+    width: 0px;
+  }
+  .preview__content {
+    width: 100%;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-break: normal;
-    color: transparent;
   }
 `
 
@@ -52,20 +59,24 @@ customElements.define(
     constructor() {
       super()
       // create nodes
-      this.$control = html.node`<textarea class="control" oninput=${(e) =>
-        this.handleInput(e)} />`
-      this.$preview = html.node`<div class="preview" />`
-      // observe inner content
-      new MutationObserver((mutations) => {
-        cl('=>', this.textContent)
-        this.$control.value = this.textContent
-        this.updatePreview()
-      }).observe(this, { childList: true })
+      this.$control = el('textarea', {
+        className: 'control',
+        oninput: (e) => this.handleInput(e),
+        onchange: (e) => this.handleChange(e),
+      })
+      this.$preview = el('div', {
+        className: 'preview__content',
+      })
     }
 
     get root() {
-      cl('this.root')
       return this.attachShadow({ mode: 'open' })
+    }
+
+    get initialState() {
+      return {
+        inputValue: null,
+      }
     }
 
     render() {
@@ -73,11 +84,29 @@ customElements.define(
         <style>
           ${style}
         </style>
-        ${this.$control} ${this.$preview}
+        ${this.$control}
+        <div class="preview">
+          <div class="preview__minlines">1<br />2<br />3<br /></div>
+          ${this.$preview}
+        </div>
       `
     }
 
     connected() {
+      this.updatePreview()
+    }
+
+    get name() {
+      return this.attr('name')
+    }
+
+    get value() {
+      return this.$control.value
+    }
+
+    set value(x) {
+      if (x === undefined || this.state.inputValue !== null) return
+      this.$control.value = x
       this.updatePreview()
     }
 
@@ -86,14 +115,18 @@ customElements.define(
     }
 
     handleInput(e) {
-      // this.updatePreview()
-      this.textContent = e.target.value
+      this.state.inputValue = e.target.value
+      this.updatePreview()
     }
 
-    static get observedAttributes() {
-      return []
+    handleChange(e) {
+      this.state.inputValue = null
+      this.dispatchEvent(
+        new Event('change', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
     }
-
-    attributeChangedCallback(name, oldValue, newValue) {}
   }
 )
