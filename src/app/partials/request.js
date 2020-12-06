@@ -127,10 +127,11 @@ module.exports = (props, app) => html`
           tabs: [
             [
               () =>
-                html`<span class="ul:hover">Params</span>${props.paramsCount &&
-                  html`<span class="inlineblock ml025 color-black-40"
-                    >(${props.paramsCount})</span
-                  >`}`,
+                html`<span class="ul:hover">Params</span>${props.paramsCount
+                    ? html`<span class="inlineblock ml025 color-black-40"
+                        >(${props.paramsCount})</span
+                      >`
+                    : null}`,
               () => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
@@ -167,11 +168,11 @@ module.exports = (props, app) => html`
             ],
             [
               () =>
-                html`<span class="ul:hover">Headers</span
-                  >${props.headersCount &&
-                  html`<span class="inlineblock ml025 color-black-40"
-                    >(${props.headersCount})</span
-                  >`}`,
+                html`<span class="ul:hover">Headers</span>${props.headersCount
+                    ? html`<span class="inlineblock ml025 color-black-40"
+                        >(${props.headersCount})</span
+                      >`
+                    : null}`,
               () => html`
                 <label
                   class="block bg-black-05 code code--block outline:focus-within"
