@@ -20,7 +20,11 @@ export default class extends HTMLElement {
       },
     })
     // render
-    this.render = render.bind(null, this, this.render.bind(this))
+    this.render = render.bind(null, this.root, this.render.bind(this))
+  }
+
+  get root() {
+    return this
   }
 
   render() {}

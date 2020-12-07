@@ -1,137 +1,143 @@
-const css =
-  ':host{' +
-  'display:block;' +
-  'position:relative;' +
-  'white-space:pre-wrap;' +
-  'overflow-wrap:break-word;' +
-  'word-break:normal;' +
-  'cursor:text;' +
-  '}' +
-  'textarea{' +
-  '-webkit-appearance:none;-moz-appearance:none;appearance:none;' +
-  'box-sizing:border-box;' +
-  'display:block;' +
-  'position:absolute;' +
-  'left:0;' +
-  'top:0;' +
-  'width:100%;' +
-  'height:100%;' +
-  'resize:none;' +
-  'overflow:hidden;' +
-  'margin:0;' +
-  'border:0;' +
-  'padding:inherit;' +
-  'font-family:inherit;' +
-  'font-size:inherit;' +
-  'font-weight:inherit;' +
-  'line-height:inherit;' +
-  'text-align:inherit;' +
-  'color:inherit;' +
-  'background-color:transparent;' +
-  'box-shadow:none;' +
-  'outline:0;' +
-  'cursor:inherit;' +
-  '}' +
-  'textarea::placeholder{' +
-  'color:var(--placeholder-color,inherit);' +
-  'opacity:var(--placeholder-opacity,.5);' +
-  '}'
+import { html } from 'uhtml'
+import Component from '../rege/Component'
+import el from '../utils/el'
+import css from '../utils/ret'
+
+const style = css`
+  :host {
+    display: block;
+    position: relative;
+    cursor: text;
+  }
+  .control {
+    appearance: none;
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow: hidden;
+    margin: 0;
+    border: 0;
+    padding: inherit;
+    font: inherit;
+    text-align: inherit;
+    color: inherit;
+    background-color: transparent;
+    box-shadow: none;
+    outline: 0;
+    cursor: inherit;
+  }
+  .control::placeholder {
+    color: var(--placeholder-color, inherit);
+    opacity: var(--placeholder-opacity, 0.5);
+  }
+  .preview {
+    display: flex;
+    flex-direction: row;
+    color: transparent;
+  }
+  .preview__minlines {
+    width: 0px;
+  }
+  .preview__content {
+    width: 100%;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+`
 
 customElements.define(
   'custom-textarea',
-  class extends HTMLElement {
+  class extends Component {
     constructor() {
       super()
-      const shadow = this.attachShadow({ mode: 'open' })
-      this._preview = document.createElement('div')
-      this._preview.style.color = 'transparent'
-      this._input = document.createElement('textarea')
-      this._input.oninput = (e) => {
-        this.updatePreview()
-      }
-      this._input.onchange = (e) => {
-        this.textContent = this._input.value
-        this.dispatchEvent(
-          new Event('change', {
-            bubbles: true,
-            cancelable: true,
-          })
-        )
-      }
-      const style = document.createElement('style')
-      style.textContent = css
-      shadow.appendChild(style)
-      shadow.appendChild(this._preview)
-      shadow.appendChild(this._input)
+      // create nodes
+      this.$control = el('textarea', {
+        className: 'control',
+        oninput: (e) => this.handleInput(e),
+        onchange: (e) => this.handleChange(e),
+      })
+      this.$preview = el('div', {
+        className: 'preview__content',
+      })
     }
 
-    connectedCallback() {
-      this._input.value = this.textContent
+    get root() {
+      return this.attachShadow({ mode: 'open' })
+    }
+
+    get initialState() {
+      return {
+        value: null,
+        inputValue: null,
+      }
+    }
+
+    render() {
+      return html`
+        <style>
+          ${style}
+        </style>
+        ${this.$control}
+        <div class="preview">
+          <div class="preview__minlines">1<br />2<br />3<br /></div>
+          ${this.$preview}
+        </div>
+      `
+    }
+
+    connected() {
       this.updatePreview()
-    }
-
-    static get observedAttributes() {
-      return ['placeholder', 'disabled', 'readonly']
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-      this._input.disabled = this.hasAttribute('disabled')
-      this._input.readOnly = this.hasAttribute('readonly')
-      this._input.placeholder = this.getAttribute('placeholder')
     }
 
     get name() {
-      return this.getAttribute('name')
-    }
-
-    set name(name) {
-      this.setAttribute('name', name)
+      return this.attr('name')
     }
 
     get value() {
-      return this._input.value
+      return this.state.value
     }
 
-    set value(value) {
-      this._input.value = value
-      this.textContent = value
+    set value(x) {
+      if (x === undefined || this.state.inputValue !== null) return
+      this.state.value = x
+      this.$control.value = x
       this.updatePreview()
     }
 
-    get placeholder() {
-      return this.getAttribute('placeholder')
-    }
-
-    set placeholder(value) {
-      this.setAttribute('placeholder', value)
-    }
-
-    get disabled() {
-      return this.hasAttribute('disabled')
-    }
-
-    set disabled(is) {
-      if (is) this.setAttribute('disabled', '')
-      else this.removeAttribute('disabled')
-    }
-
-    get readonly() {
-      return this.hasAttribute('readonly')
-    }
-
-    set readonly(is) {
-      if (is) this.setAttribute('readonly', '')
-      else this.removeAttribute('readonly')
-    }
-
     updatePreview() {
-      this._preview.innerHTML =
-        this._input.value
-          .replace(/&/gm, '&amp;')
-          .replace(/"/gm, '&quot;')
-          .replace(/'/gm, '&#39;')
-          .replace(/</gm, '&lt;')
-          .replace(/>/gm, '&gt;') + ' '
+      this.$preview.textContent = `${
+        this.state.inputValue || this.state.value
+      }.`
+    }
+
+    handleInput(e) {
+      this.state.value = e.target.value.trim()
+      this.state.inputValue = e.target.value
+      this.updatePreview()
+      this.dispatchEvent(
+        new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    }
+
+    handleChange(e) {
+      this.state.inputValue = null
+      this.dispatchEvent(
+        new Event('change', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
     }
   }
 )
