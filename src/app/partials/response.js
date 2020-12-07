@@ -27,11 +27,10 @@ ${props.json ? JSON.stringify(props.json, null, 2) : props.body}</pre
                 ],
                 [
                   () =>
-                    html`<span class="ul:hover">Headers</span>${props
-                        ? html`<span class="inlineblock ml025 color-black-40"
-                            >(${props.headers.length})</span
-                          >`
-                        : ``}`,
+                    html`<span class="ul:hover">Headers</span
+                      ><span class="inlineblock ml025 color-black-40"
+                        >(${props.headers.length})</span
+                      >`,
                   () => html`
                     <div
                       class="code code--block bg-black-05"
