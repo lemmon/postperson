@@ -75,6 +75,7 @@ customElements.define(
 
     get initialState() {
       return {
+        value: null,
         inputValue: null,
       }
     }
@@ -101,22 +102,32 @@ customElements.define(
     }
 
     get value() {
-      return this.$control.value
+      return this.state.value
     }
 
     set value(x) {
       if (x === undefined || this.state.inputValue !== null) return
+      this.state.value = x
       this.$control.value = x
       this.updatePreview()
     }
 
     updatePreview() {
-      this.$preview.textContent = `${this.$control.value}.`
+      this.$preview.textContent = `${
+        this.state.inputValue || this.state.value
+      }.`
     }
 
     handleInput(e) {
+      this.state.value = e.target.value.trim()
       this.state.inputValue = e.target.value
       this.updatePreview()
+      this.dispatchEvent(
+        new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
     }
 
     handleChange(e) {
