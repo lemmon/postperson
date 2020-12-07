@@ -1,7 +1,7 @@
 #!/bin/sh
 cd "$(dirname $0)/.."
 
-npm run build
+bin/build
 bin/process
 
 vercel --prod

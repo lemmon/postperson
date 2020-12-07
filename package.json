@@ -10,7 +10,6 @@
   },
   "scripts": {
     "build:app": "rollup --config rollup.dist.config.js",
-    "build": "npm run build:app",
     "w:app": "rollup --config rollup.dev.config.js --watch",
     "w:css": "abrusco src/css -o develop/build/master.css --watch",
     "w": "npm run w:app & npm run w:css"
